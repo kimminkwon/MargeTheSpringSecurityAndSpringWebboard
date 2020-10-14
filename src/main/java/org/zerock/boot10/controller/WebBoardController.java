@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -82,6 +83,7 @@ public class WebBoardController {
     }
 
     // 상세 내용 보기 + 수정 혹은 삭제로 이동 가능 페이지로 연결
+    @Secured(value = {"ROLE_BASIC", "ROLE_MANAGER", "ROLE_ADMIN"})
     @GetMapping("/modify")
     public void modify(Long bno, @ModelAttribute("pageVO") PageVO vo, Model model) {
         log.info("IN CONTROLLER: modify() called...");
@@ -92,6 +94,7 @@ public class WebBoardController {
     }
 
     // modify 페이지에서 수정을 눌렀을 때
+    @Secured(value = {"ROLE_BASIC", "ROLE_MANAGER", "ROLE_ADMIN"})
     @PostMapping("/modify")
     public String modifyPost(WebBoardModifyDto dto, PageVO vo, RedirectAttributes rttr) {
         log.info("IN CONTROLLER: modifyPost() called...");
@@ -111,6 +114,7 @@ public class WebBoardController {
     }
 
     // modify 페이지에서 삭제를 눌렀을 때
+    @Secured(value = {"ROLE_BASIC", "ROLE_MANAGER", "ROLE_ADMIN"})
     @PostMapping("/delete")
     public String delete(Long bno, PageVO vo, RedirectAttributes rttr) {
         log.info("IN CONTROLLER: delete() called...");
