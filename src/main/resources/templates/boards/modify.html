@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout/layout1}">
 
 <div layout:fragment="content">
@@ -7,7 +8,6 @@
     <div class="panel-body">
 
         <form id = 'f1'>
-            `
             <div class="form-group">
                 <label>BNO</label>
                 <input class="form-control" name="bno" th:value="${dto.bno}" readonly="readonly" />
@@ -32,6 +32,9 @@
             <input type="hidden" name="size" th:value="${pageVO.size}">
             <input type="hidden" name="type" th:value="${pageVO.type}">
             <input type="hidden" name="keyword" th:value="${pageVO.keyword}">
+
+            <!-- 이를 통해 csrf 파라미터를 넘겨줌, 시큐리티가 포함됐을 때 필요하다! -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
         </form>
 

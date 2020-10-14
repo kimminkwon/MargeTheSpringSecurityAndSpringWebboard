@@ -4,6 +4,10 @@
       layout:decorate="~{layout/layout1}">
 
 <div layout:fragment="content">
+
+    <!-- csrf 토큰이 처리되게 하기위한 의미없는 태그 -->
+    <form th:action="${'/login'}"></form>
+
     <div class="panel-heading">View Page</div>
     <div class="panel-body">
 
@@ -76,7 +80,7 @@
                     <label>Reply Text</label>
                     <input type="text" class="form-control" name="replyText">
                     <label>Replyer</label>
-                    <input type="text" class="form-control" name="replyer">
+                    <input type="text" class="form-control" name="replyer" readonly="readonly">
                 </div>
                 <div class="modal-footer">
                     <button id="delModalBtn" class="btn btn-danger">Delete</button>
@@ -128,9 +132,22 @@
                         + date.getDate();
             }
 
+            var uid = [[ ${#authentication.principal} eq 'anonymousUser' ? null : ${#authentication.principal.member.uid} ]];
+            var csrf = JSON.parse('[[${_csrf}]]');
+
             // 댓글 추가 버튼을 눌렀을 때의 작동
             var mode;
-            $("#addReplyBtn").on('click', function (){
+            $("#addReplyBtn").on('click', function(){
+                if(uid == null) {
+                    if(confirm("로그인 할까요?")) {
+                        self.location = [[@{/login}]];
+                    }
+                    return;
+                }
+
+                replyerObj.val(uid);
+
+
                $("#myModal").modal("show");
                $(".modal-title").text("Add Reply");
                $("#delModalBtn").hide();
@@ -152,11 +169,11 @@
             $("#modalBtn").click(function () {
 
                 var replyText = replyTextObj.val();
-                var replyer = replyerObj.val();;
+                var replyer = replyerObj.val();
 
                if(mode == "ADD") {
-                   var obj = {replyText:replyText, replyer:replyer, bno:bno}
-                   console.log(obj)
+                   var obj = {replyText:replyText, replyer:replyer, bno:bno, csrf:csrf};
+                   console.log(obj);
 
                    replyManager.add(obj, function (list) {
 
@@ -215,7 +232,6 @@
             }
         });
 
-        var uid = [[ ${#authentication.principal} eq 'anonymousUser' ? null : ${#authentication.principal.member.uid} ]];
         $("#goModBtn").click(function (e) {
            e.preventDefault();
            if(uid == null) {

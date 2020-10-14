@@ -5,6 +5,7 @@ import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.boot10.domain.WebReply;
 import org.zerock.boot10.dto.WebReplyDto;
@@ -29,6 +30,7 @@ public class WebReplyController {
     private final WebReplyService service;
 
     // 댓글 추가 기능 (POST)
+    @Secured(value = {"ROLE_BASIC", "ROLE_MANAGER", "ROLE_ADMIN"})
     @PostMapping("/{bno}")
     public ResponseEntity<List<WebReplyDto>> addReply(@PathVariable("bno") Long bno, @RequestBody WebReply reply) {
         log.info("IN REPLY CONTROLLER: addReply() called...");
@@ -39,6 +41,7 @@ public class WebReplyController {
     }
 
     // 댓글 삭제 기능 (Delete): 댓글 삭제용 rno와 삭제 후 갱신을 위한 bno
+    @Secured(value = {"ROLE_BASIC", "ROLE_MANAGER", "ROLE_ADMIN"})
     @DeleteMapping("/{bno}/{rno}")
     public ResponseEntity<List<WebReplyDto>> removeReply(@PathVariable("bno") Long bno, @PathVariable("rno") Long rno) {
         log.info("IN REPLY CONTROLLER: removeReply() called...");
@@ -49,6 +52,7 @@ public class WebReplyController {
     }
 
     // 댓글 수정 기능 (PUT)
+    @Secured(value = {"ROLE_BASIC", "ROLE_MANAGER", "ROLE_ADMIN"})
     @PutMapping("/{bno}")
     public ResponseEntity<List<WebReplyDto>> modifyReply(@PathVariable("bno") Long bno, @RequestBody WebReply reply) {
         log.info("IN REPLY CONTROLLER: modifyReply() called...");
